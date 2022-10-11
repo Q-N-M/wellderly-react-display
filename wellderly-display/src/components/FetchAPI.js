@@ -19,36 +19,28 @@ class FetchAPI extends Component {
         this.url = props.url;
         this.state = {
             isFetching: false,
-            isFetched: false,
-            cardWrapperBackground: "#024773",
-            cardWrapperDivBackground: "",
-            cardWrapperDivBorder: "",
-            listOfUsersEmoji: {}
+            listOfUsersEmoji: []
         };
-        if(props.dummy === "true" || props.dummy == null){
-            this.current_date = "2022-10-05";
-            this.state.listOfUsersEmoji = {
-                "2022-10-05": {
-                    "emoji_1_data": 50.0,
-                    "emoji_2_data": 21.428571428571427,
-                    "emoji_3_data": 14.285714285714285,
-                    "emoji_4_data": 7.142857142857142,
-                    "emoji_5_data": 7.142857142857142,
-                    "total_data": 14
-                }
-            };
-            this.state.isFetched = true;
-        }else{
-            // let date = new Date();
-            // this.current_date = date.getFullYear().toString() + "-" + (date.getMonth()+1).toString() + "-" + date.getDate().toString();
-            this.current_date = "2022-10-05";
+        if(props.dummy === "true"){
+            this.state.listOfUsersEmoji = [{
+                "id": 1,
+                "name": "New Test",
+                "emoji": 1,
+                "date": "2022-10-04"
+            },
+            {
+                "id": 2,
+                "name": "New Test 1",
+                "emoji": 2,
+                "date": "2022-10-04"
+            }];
         }
     }
 
-    componentDidMount() {
-        this.fetchUsers();
-        //this.timer = setInterval(() => this.fetchUsers(), 5000);
-    }
+    // componentDidMount() {
+    //     this.fetchUsers();
+    //     this.timer = setInterval(() => this.fetchUsers(), 5000);
+    // }
 
     // componentWillUnmount() {
     //     clearInterval(this.timer);
@@ -57,18 +49,19 @@ class FetchAPI extends Component {
 
     async fetchUsers() {
         try {
-            this.setState({...this.state, isFetching: true, isFetched: false});
+            this.setState({...this.state, isFetching: true});
             fetch(this.url, {
                 method: "GET"
             }).then(
                 response => response.json()
             ).then(result => {
-                    this.setState({...this.state, listOfUsersEmoji: result, isFetching: false, isFetched: true})
+                    this.setState({listOfUsersEmoji: result, isFetching: false})
                 }
             );
+            this.setState({users: response.data, isFetching: false});
         } catch (e) {
             console.log(e);
-            this.setState({...this.state, isFetching: false, isFetched: false});
+            this.setState({...this.state, isFetching: false});
         }
     }
 
@@ -86,137 +79,56 @@ class FetchAPI extends Component {
         }
     }
 
-    getEmotionCode(emoji){
-        if(emoji === "Ecstatic"){
-            return ["#09887B", "ecstatic"];
-        }else if(emoji === "Happy"){
-            return ["#5D9D47", "happy"];
-        }else if(emoji === "Neutral"){
-            return ["#BA8B2E", "neutral"];
-        }else if(emoji === "Sad"){
-            return ["#486991", "down"];
-        }else if(emoji === "Angry"){
-            return ["#B13D3D", "angry"];
-        }
-    }
-
     parseEmojiCodeToName(code){
-        if(code === "emoji_1_data"){
+        if(code === 1){
             return "Happy";
-        }else if(code === "emoji_2_data"){
+        }else if(code === 2){
             return "Sad";
-        }else if(code === "emoji_3_data"){
+        }else if(code === 3){
             return "Angry";
-        }else if(code === "emoji_4_data"){
+        }else if(code === 4){
             return "Neutral";
-        }else if(code === "emoji_5_data"){
+        }else if(code === 5){
             return "Ecstatic";
         }
     }
 
-    getStyleBasedOnEmoji(code){
-        if(code === "emoji_1_data"){
-            return {
-                "background" : {
-                    background: "#92DE7F"
-                },
-                "card-wrapper-div" : {
-                    background: "#5D9D47",
-                    border: "12px solid #315827"
-                },
-            };
-        }else if(code === "emoji_2_data"){
-            return {
-                "background" : {
-                    background: "#95C5EC"
-                },
-                "card-wrapper-div" : {
-                    background: "#486991",
-                    border: "12px solid #193D67"
-                },
-            };
-        }else if(code === "emoji_3_data"){
-            return {
-                "background" : {
-                    background: "#F58888"
-                },
-                "card-wrapper-div" : {
-                    background: "#B13D3D",
-                    border: "12px solid #881313"
-                },
-            };
-        }else if(code === "emoji_4_data"){
-            return {
-                "background" : {
-                    background: "#F5DD88"
-                },
-                "card-wrapper-div" : {
-                    background: "#BA8B2E",
-                    border: "12px solid #8D591B"
-                },
-            };
-        }else if(code === "emoji_5_data"){
-            return {
-                "background" : {
-                    background: "#7ECFC7"
-                },
-                "card-wrapper-div" : {
-                    background: "#09887B",
-                    border: "12px solid #08534B"
-                },
-            };
-        }else{
-            return false;
-        }
-    }
-
     renderCards(){
-
-        const data = new Map(Object.entries(this.state.listOfUsersEmoji[this.current_date]));
-        const parsedData = [];
-        data.forEach((result, emoji) => {
-            if(emoji.includes("emoji")){
-                parsedData.push(emoji+":"+result.toString());
-            }
-        })
-
         const imageStyle = {
             width: "50%",
             height: "auto",
         }
 
-        return parsedData.map((data) => {
-                return (
-                    <Card style={{textAlign: "center", background: "#FFFFFF", border: "10px solid #BABABA", borderRadius: "25px"}}>
-                        <div id='separator' style={{height: "25%"}}>&nbsp;</div>
-                        <div>
-                            <img src={this.getEmoji(this.parseEmojiCodeToName(data.split(":")[0]))} style={imageStyle}></img>
-                            <div id="separator">&nbsp;</div>
-                            <b>{data.split(":")[1]}% of ?</b>
-                            <br />
-                            feels <font style={{color: this.getEmotionCode(this.parseEmojiCodeToName(data.split(":")[0]))[0]}}>{this.getEmotionCode(this.parseEmojiCodeToName(data.split(":")[0]))[1]}</font> today
-                        </div>
-                    </Card>
-                );
+        const cardStyle = {
+            textAlign: "center",
+            backgroundColor: "#059FFF"
+        }
+
+        return this.state.listOfUsersEmoji.map((user) => {
+            return (
+                <Card key={user.id} style={cardStyle}>
+                    <div id='separator' style={{height: "25%"}}>&nbsp;</div>
+                    <div>
+                        <img src={this.getEmoji(this.parseEmojiCodeToName(user.emoji))} style={imageStyle}></img>
+                        <div id="separator">&nbsp;</div>
+                        {user.date}
+                    </div>
+                </Card>
+            );
             }
         );
     }
 
     render() {
+        const wrapperStyle = {
+            backgroundColor: "#024773"
+          }
 
-        if(this.state.isFetching){
-            return(<>RENDERING....</>);
-        }else{
-            if(this.state.isFetched){
-                return (
-                        <CardWrapper style={{background: this.state.cardWrapperBackground}}>
-                            {this.renderCards()}
-                        </CardWrapper>
-                );
-            }else{
-                return(<>RENDERING</>);
-            }
-        }
+        return (
+            <CardWrapper style={wrapperStyle}>
+                {this.renderCards()}
+            </CardWrapper>
+        );
     }
 }
 
