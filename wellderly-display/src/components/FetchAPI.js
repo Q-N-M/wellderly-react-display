@@ -39,9 +39,8 @@ class FetchAPI extends Component {
             };
             this.state.isFetched = true;
         }else{
-            // let date = new Date();
-            // this.current_date = date.getFullYear().toString() + "-" + (date.getMonth()+1).toString() + "-" + date.getDate().toString();
-            this.current_date = "2022-10-05";
+            let date = new Date();
+            this.current_date = date.getFullYear().toString() + "-" + (date.getMonth()+1).toString() + "-" + date.getDate().toString();
         }
     }
 
@@ -208,9 +207,12 @@ class FetchAPI extends Component {
 
         const data = new Map(Object.entries(this.state.listOfUsersEmoji[this.current_date]));
         const parsedData = [];
+    
+        console.log(data);
+
         data.forEach((result, emoji) => {
             if(emoji.includes("emoji")){
-                parsedData.push(emoji+":"+result.toString());
+                parsedData.push(emoji+":"+result[0].toString()+":"+result[1].toString());
             }
         })
 
@@ -226,7 +228,7 @@ class FetchAPI extends Component {
                         <div>
                             <img src={this.getEmoji(this.parseEmojiCodeToName(data.split(":")[0]))} style={imageStyle}></img>
                             <div id="separator">&nbsp;</div>
-                            <b>{data.split(":")[1]}% of ?</b>
+                            <b>{data.split(":")[1]}% of {data.split(":")[2]}</b>
                             <br />
                             feels <font style={{color: this.getEmotionCode(this.parseEmojiCodeToName(data.split(":")[0]))[0]}}>{this.getEmotionCode(this.parseEmojiCodeToName(data.split(":")[0]))[1]}</font> today
                         </div>
