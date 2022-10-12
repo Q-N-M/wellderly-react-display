@@ -20,9 +20,9 @@ class FetchAPI extends Component {
         this.state = {
             isFetching: false,
             isFetched: false,
-            cardWrapperBackground: "#024773",
-            cardWrapperDivBackground: "",
-            cardWrapperDivBorder: "",
+            divCardWrapper: "#024773",
+            cardWrapperBackground: "grey",
+            cardWrapperBorder: "",
             listOfUsersEmoji: {}
         };
         if(props.dummy === "true" || props.dummy == null){
@@ -45,6 +45,18 @@ class FetchAPI extends Component {
         }
     }
 
+    // Code to be called when the cards are swiped
+    onSwipe(data){
+        this.state.divCardWrapper = this.getStyleBasedOnEmoji(data)["background"]["background"];
+        this.state.cardWrapperBackground = this.getStyleBasedOnEmoji(data)["card-wrapper-div"]["background"];
+        this.state.cardWrapperBorder = this.getStyleBasedOnEmoji(data)["card-wrapper-div"]["border"];
+        document.body.style.background = this.state.divCardWrapper;
+        document.getElementById("divBackground").style.background = this.state.divCardWrapper;
+        // <CardWrapper> has a class name called cards_container
+        document.getElementsByClassName("cards_container")[0].style.background = this.state.cardWrapperBackground;
+        document.getElementsByClassName("cards_container")[0].style.border = this.state.cardWrapperBorder;
+    }
+    
     componentDidMount() {
         this.fetchUsers();
         //this.timer = setInterval(() => this.fetchUsers(), 5000);
@@ -97,6 +109,20 @@ class FetchAPI extends Component {
             return ["#486991", "down"];
         }else if(emoji === "Angry"){
             return ["#B13D3D", "angry"];
+        }
+    }
+
+    getNextEmojiCodeToName(code){
+        if(code === "emoji_1_data"){
+            return "emoji_2_data";
+        }else if(code === "emoji_2_data"){
+            return "emoji_3_data";
+        }else if(code === "emoji_3_data"){
+            return "emoji_4_data";
+        }else if(code === "emoji_4_data"){
+            return "emoji_5_data";
+        }else{
+            return "last";
         }
     }
 
@@ -166,7 +192,15 @@ class FetchAPI extends Component {
                 },
             };
         }else{
-            return false;
+            return {
+                "background" : {
+                    background: "#7ECFC7"
+                },
+                "card-wrapper-div" : {
+                    background: "#09887B",
+                    border: "12px solid #08534B"
+                },
+            };
         }
     }
 
@@ -187,7 +221,7 @@ class FetchAPI extends Component {
 
         return parsedData.map((data) => {
                 return (
-                    <Card style={{textAlign: "center", background: "#FFFFFF", border: "10px solid #BABABA", borderRadius: "25px"}}>
+                    <Card onSwipe={this.onSwipe.bind(this, this.getNextEmojiCodeToName(data.split(":")[0]))} style={{textAlign: "center", background: "#FFFFFF", border: "10px solid #BABABA", borderRadius: "25px"}}>
                         <div id='separator' style={{height: "25%"}}>&nbsp;</div>
                         <div>
                             <img src={this.getEmoji(this.parseEmojiCodeToName(data.split(":")[0]))} style={imageStyle}></img>
@@ -209,9 +243,17 @@ class FetchAPI extends Component {
         }else{
             if(this.state.isFetched){
                 return (
-                        <CardWrapper style={{background: this.state.cardWrapperBackground}}>
+                    <div id="divBackground" style={{background: this.state.divCardWrapper}}>
+                        <CardWrapper style={{width: "60%", border: this.state.cardWrapperBorder, background: this.state.cardWrapperBackground, marginLeft: "auto", marginRight: "auto"}}>
+                            <Card onSwipe={this.onSwipe.bind(this, "emoji_1_data")} style={{textAlign: "center", background: "#FFFFFF", border: "10px solid #BABABA", borderRadius: "25px"}}>
+                                ?
+                            </Card>
                             {this.renderCards()}
+                            <Card style={{textAlign: "center", background: "#FFFFFF", border: "10px solid #BABABA", borderRadius: "25px"}}>
+                                Last card
+                            </Card>
                         </CardWrapper>
+                    </div>
                 );
             }else{
                 return(<>RENDERING</>);
