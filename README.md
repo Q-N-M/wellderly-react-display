@@ -4,7 +4,7 @@ Interactive display for wellderly appplication with react
 ## Installation
 ```bash
 git clone https://github.com/Q-N-M/wellderly-react-display.git
-cd ./wellderly-display
+cd ./wellderly-react-display/wellderly-display
 npm install
 ```
 
