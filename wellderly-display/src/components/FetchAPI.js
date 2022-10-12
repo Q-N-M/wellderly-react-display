@@ -83,6 +83,11 @@ class FetchAPI extends Component {
         }
     }
 
+    /**
+     * 
+     * @param {string} emoji code name
+     * @returns image path for respective emoji
+     */
     getEmoji(emoji) {
         if(emoji === "Ecstatic"){
             return happy;
@@ -97,6 +102,11 @@ class FetchAPI extends Component {
         }
     }
 
+    /**
+     * 
+     * @param {string} emoji string
+     * @returns CSS font color for each emoji for the card
+     */
     getEmotionCode(emoji){
         if(emoji === "Ecstatic"){
             return ["#09887B", "ecstatic"];
@@ -111,6 +121,11 @@ class FetchAPI extends Component {
         }
     }
 
+    /**
+     * 
+     * @param {string} code is APIs emoji name
+     * @returns the next 'emoji' name for the card wrapper
+     */
     getNextEmojiCodeToName(code){
         if(code === "emoji_1_data"){
             return "emoji_2_data";
@@ -125,6 +140,11 @@ class FetchAPI extends Component {
         }
     }
 
+    /**
+     * 
+     * @param {string} code 
+     * @returns translated Emoji type from the APIs code name
+     */
     parseEmojiCodeToName(code){
         if(code === "emoji_1_data"){
             return "Happy";
@@ -204,7 +224,6 @@ class FetchAPI extends Component {
     }
 
     renderCards(){
-
         const data = new Map(Object.entries(this.state.listOfUsersEmoji[this.current_date]));
         const parsedData = [];
     
@@ -239,7 +258,6 @@ class FetchAPI extends Component {
     }
 
     render() {
-
         if(this.state.isFetching){
             return(<>RENDERING....</>);
         }else{
