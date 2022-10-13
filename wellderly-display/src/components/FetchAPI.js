@@ -44,15 +44,6 @@ class FetchAPI extends Component {
         }
     }
 
-    // Function to send the code to the flask server
-    async sendDataToFlaskServer(data){
-        try{
-            fetch("http://localhost:5000?cc=".concat(data));
-        }catch(e){
-            console.log(e);
-        }
-    }
-
     // Code to be called when the cards are swiped
     onSwipe(data){
         this.state.divCardWrapper = this.getStyleBasedOnEmoji(data)["background"]["background"];
@@ -63,7 +54,6 @@ class FetchAPI extends Component {
         // <CardWrapper> has a class name called cards_container
         document.getElementsByClassName("cards_container")[0].style.background = this.state.cardWrapperBackground;
         document.getElementsByClassName("cards_container")[0].style.border = this.state.cardWrapperBorder;
-        this.sendDataToFlaskServer(data);
     }
     
     componentDidMount() {
