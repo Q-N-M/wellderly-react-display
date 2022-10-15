@@ -18,6 +18,7 @@ class FetchAPI extends Component {
         super(props);
         this.url = props.url;
         this.state = {
+            data: null,
             isFetching: false,
             isFetched: false,
             divCardWrapper: "#024773",
@@ -46,14 +47,69 @@ class FetchAPI extends Component {
 
     // Code to be called when the cards are swiped
     onSwipe(data){
-        this.state.divCardWrapper = this.getStyleBasedOnEmoji(data)["background"]["background"];
-        this.state.cardWrapperBackground = this.getStyleBasedOnEmoji(data)["card-wrapper-div"]["background"];
-        this.state.cardWrapperBorder = this.getStyleBasedOnEmoji(data)["card-wrapper-div"]["border"];
-        document.body.style.background = this.state.divCardWrapper;
-        document.getElementById("divBackground").style.background = this.state.divCardWrapper;
-        // <CardWrapper> has a class name called cards_container
-        document.getElementsByClassName("cards_container")[0].style.background = this.state.cardWrapperBackground;
-        document.getElementsByClassName("cards_container")[0].style.border = this.state.cardWrapperBorder;
+        if(data === "show-full-info"){
+
+            // Remove the <CardWrapper>
+            document.getElementById("divBackground").remove();
+
+            let fullInfoDomObject = document.getElementById("fullInfo");
+            
+            // Create chart with Chart.js
+            let chartCanvas = document.createElement("canvas");
+            chartCanvas.id = "fullChart";
+            chartCanvas.style.width = "50%";
+            chartCanvas.style.height = "100%";
+            fullInfoDomObject.appendChild(chartCanvas);
+
+            // Append the script for the chart into body
+            let chartCanvasScript = document.createElement("script");
+            chartCanvasScript.innerHTML = `
+            var xValues = ["Happy", "Down", "Angry", "Neutral", "Ecstatic"];
+            var yValues = [${this.state.data[0].split(":")[1]}, ${this.state.data[1].split(":")[1]}, ${this.state.data[2].split(":")[1]}, ${this.state.data[3].split(":")[1]}, ${this.state.data[4].split(":")[1]}];
+            var barColors = [
+            "rgba(146, 222, 127, 1)",
+            "rgba(149, 197, 236, 1)",
+            "rgba(245, 136, 136, 1)",
+            "rgba(245, 221, 136, 1)",
+            "rgba(126, 207, 199, 1)"
+            ];
+
+            new Chart("fullChart", {
+            type: "bar",
+            data: {
+                labels: xValues,
+                datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+                }]
+            },
+            options: {
+                legend: {display: false},
+                scales: {
+                yAxes: [{
+                    ticks: {
+                    beginAtZero: true
+                    }
+                }],
+                }
+            }
+            });`;
+            document.body.appendChild(chartCanvasScript);
+            document.body.style.background = "white";
+
+            // After 20 seconds, reload the page
+            setTimeout(() => {window.location.reload()}, 20000);
+
+        }else{
+            this.state.divCardWrapper = this.getStyleBasedOnEmoji(data)["background"]["background"];
+            this.state.cardWrapperBackground = this.getStyleBasedOnEmoji(data)["card-wrapper-div"]["background"];
+            this.state.cardWrapperBorder = this.getStyleBasedOnEmoji(data)["card-wrapper-div"]["border"];
+            document.body.style.background = this.state.divCardWrapper;
+            document.getElementById("divBackground").style.background = this.state.divCardWrapper;
+            // <CardWrapper> has a class name called cards_container
+            document.getElementsByClassName("cards_container")[0].style.background = this.state.cardWrapperBackground;
+            document.getElementsByClassName("cards_container")[0].style.border = this.state.cardWrapperBorder;
+        }
     }
     
     componentDidMount() {
@@ -235,6 +291,8 @@ class FetchAPI extends Component {
             }
         })
 
+        this.state.data = parsedData;
+
         const imageStyle = {
             width: "50%",
             height: "auto",
@@ -263,17 +321,21 @@ class FetchAPI extends Component {
         }else{
             if(this.state.isFetched){
                 return (
-                    <div id="divBackground" style={{background: this.state.divCardWrapper}}>
-                        <CardWrapper style={{width: "60%", border: this.state.cardWrapperBorder, background: this.state.cardWrapperBackground, marginLeft: "auto", marginRight: "auto"}}>
-                            <Card onSwipe={this.onSwipe.bind(this, "emoji_1_data")} style={{textAlign: "center", background: "#FFFFFF", border: "10px solid #BABABA", borderRadius: "25px"}}>
-                                ?
-                            </Card>
-                            {this.renderCards()}
-                            <Card style={{textAlign: "center", background: "#FFFFFF", border: "10px solid #BABABA", borderRadius: "25px"}}>
-                                Last card
-                            </Card>
-                        </CardWrapper>
-                    </div>
+                    <>
+                        <div id="divBackground" style={{background: this.state.divCardWrapper}}>
+                            <CardWrapper style={{width: "60%", border: this.state.cardWrapperBorder, background: this.state.cardWrapperBackground, marginLeft: "auto", marginRight: "auto"}}>
+                                <Card onSwipe={this.onSwipe.bind(this, "emoji_1_data")} style={{textAlign: "center", background: "#FFFFFF", border: "10px solid #BABABA", borderRadius: "25px"}}>
+                                    ?
+                                </Card>
+                                {this.renderCards()}
+                                <Card onSwipe={this.onSwipe.bind(this, "show-full-info")} style={{textAlign: "center", background: "#FFFFFF", border: "10px solid #BABABA", borderRadius: "25px"}}>
+                                    Last card
+                                </Card>
+                            </CardWrapper>
+                        </div>
+                        <div id="fullInfo">
+                        </div>
+                    </>
                 );
             }else{
                 return(<>RENDERING</>);
