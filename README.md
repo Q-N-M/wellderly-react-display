@@ -35,6 +35,10 @@ Use Arduino IDE to compile the code to arduino board
 * [Pyserial](https://pypi.org/project/pyserial/)
 * [PyAutoGUI](https://pypi.org/project/PyAutoGUI/)
 
+## NOTES
+
+One thing to note about the sensor is make sure to keep the mouse up. Arduino will send serial command to pyserial and pyserial will move the mouse based on the specified direction by using pyautogui module. If the system doesn't has mouse input or the mouse pointer is not appeared in the screen (mouse is in sleep mode), pyautogui can't contact the mouse.
+
 ## Mention
 Thanks to [Vecteezy](https://www.vecteezy.com/vector-art/442722-question-mark-vector-icon) for the question mark image for the display
 
