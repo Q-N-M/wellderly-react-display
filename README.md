@@ -10,14 +10,24 @@ cd ./wellderly-react-display/wellderly-display
 npm install
 ```
 
-2. Pyserial (Windows)
+2.1 Pyserial (Windows)
 ```bash
 cd ./wellderly-react-display/wellderly-pyserial
 python -m venv env
-.\env\Scripts\activate
+.\env\Scripts\activate.bat
 pip install -r requirements.txt
 python pyserial-card-drag.py comX Y
 ```
+
+2.2 Pyserial (Linux)
+```bash
+cd ./wellderly-react-display/wellderly-pyserial
+python -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+python pyserial-card-drag.py comX Y
+```
+
 Where comX is the allocated arduino port and Y is the baud rate (based on the arduino code, the baud rate is 115200)
 
 3. Arduino
