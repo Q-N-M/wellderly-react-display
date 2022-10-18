@@ -101,7 +101,7 @@ class FetchAPI extends Component {
             document.body.style.background = "white";
 
             // After 20 seconds, reload the page
-            setTimeout(() => {window.location.reload()}, 20000);
+            setTimeout(() => {window.location.reload()}, 15000);
 
         }else{
             if(data === "last"){
@@ -337,6 +337,12 @@ class FetchAPI extends Component {
     }
 
     render() {
+
+        const imageStyle = {
+            width: "50%",
+            height: "auto",
+        }
+
         if(this.state.isFetching){
             return(<>RENDERING....</>);
         }else{
@@ -354,20 +360,26 @@ class FetchAPI extends Component {
                                 </Card>
                                 {this.renderCards()}
                                 <Card onSwipe={this.onSwipe.bind(this, "show-full-info")} style={{textAlign: "center", background: "#FFFFFF", border: "10px solid #BABABA", borderRadius: "25px"}}>
-                                    <div style={{height: "20%"}}>&nbsp;</div>
-                                    You are looking at
-                                    <br />
-                                    elderlies' emotions of
-                                    <br />
-                                    the display
-                                    <br /><br />
-                                    Elderlies in your area
-                                    <br />
-                                    feel <b>{this.parseEmojiCodeToName(this.state.highest_percentage_of_emoji)}</b> today
-                                    <br />
-                                    <br />
-                                    <br />
-                                    Wellderly
+                                    <div style={{height: "10%"}}>&nbsp;</div>
+                                    <div style={{fontFamily: "space-mono"}}>
+                                        <b>
+                                        You are looking at
+                                        <br />
+                                        elderlies' emotions of
+                                        <br />
+                                        the display
+                                        <br /><br />
+                                        Elderlies in your area
+                                        <br />
+                                        feel <b>{this.parseEmojiCodeToName(this.state.highest_percentage_of_emoji)}</b> today
+                                        <br />
+                                        <br />
+                                        <img src={this.getEmoji(this.parseEmojiCodeToName(this.state.highest_percentage_of_emoji))} style={imageStyle} />
+                                        <br />
+                                        <br />
+                                        Wellderly
+                                        </b>
+                                    </div>
                                 </Card>
                             </CardWrapper>
                         </div>
