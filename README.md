@@ -31,9 +31,9 @@ Use Arduino IDE to compile the code to arduino board
 4. Browser will pop up and the user can use the screen as the visual display
 
 ## Required module
-[React Swipeable Cards](https://github.com/ravelinx22/react-swipeable-cards)
-[Pyserial](https://pypi.org/project/pyserial/)
-[PyAutoGUI](https://pypi.org/project/PyAutoGUI/)
+* [React Swipeable Cards](https://github.com/ravelinx22/react-swipeable-cards)
+* [Pyserial](https://pypi.org/project/pyserial/)
+* [PyAutoGUI](https://pypi.org/project/PyAutoGUI/)
 
 ## Mention
 Thanks to [Vecteezy](https://www.vecteezy.com/vector-art/442722-question-mark-vector-icon) for the question mark image for the display
