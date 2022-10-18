@@ -42,7 +42,7 @@ void loop() {
   find_distance();
   sensor_distance = distance;
 
-  // If the hand distance is between 10 to 30 cm
+  // If the hand distance is between 1 to 30 cm
   if(sensor_distance >= 1 && sensor_distance <= 30){
     sensor_current_time = millis();
     // For the first 1 second when the sensor detected user's hand
