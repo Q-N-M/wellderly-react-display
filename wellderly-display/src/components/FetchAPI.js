@@ -11,6 +11,7 @@ import flat from "../statics/Flat.png";
 import happy from "../statics/Happy.png";
 import sad from "../statics/Sad.png";
 import smile from "../statics/Smile.png";
+import question_mark from "../statics/question-mark.jpg";
 
 class FetchAPI extends Component {
 
@@ -24,7 +25,9 @@ class FetchAPI extends Component {
             divCardWrapper: "#024773",
             cardWrapperBackground: "grey",
             cardWrapperBorder: "",
-            listOfUsersEmoji: {}
+            listOfUsersEmoji: {},
+            total_data: 0,
+            highest_percentage_of_emoji: ""
         };
         if(props.dummy === "true" || props.dummy == null){
             this.current_date = "2022-10-05";
@@ -57,8 +60,8 @@ class FetchAPI extends Component {
             // Create chart with Chart.js
             let chartCanvas = document.createElement("canvas");
             chartCanvas.id = "fullChart";
-            chartCanvas.style.width = "50%";
-            chartCanvas.style.height = "100%";
+            // chartCanvas.style.width = "50%";
+            // chartCanvas.style.height = "100%";
             fullInfoDomObject.appendChild(chartCanvas);
 
             // Append the script for the chart into body
@@ -101,6 +104,9 @@ class FetchAPI extends Component {
             setTimeout(() => {window.location.reload()}, 20000);
 
         }else{
+            if(data === "last"){
+                data = this.state.highest_percentage_of_emoji;
+            }
             this.state.divCardWrapper = this.getStyleBasedOnEmoji(data)["background"]["background"];
             this.state.cardWrapperBackground = this.getStyleBasedOnEmoji(data)["card-wrapper-div"]["background"];
             this.state.cardWrapperBorder = this.getStyleBasedOnEmoji(data)["card-wrapper-div"]["border"];
@@ -279,19 +285,34 @@ class FetchAPI extends Component {
         }
     }
 
+    getQuestionMark(){
+        return question_mark;
+    }
+
     renderCards(){
         const data = new Map(Object.entries(this.state.listOfUsersEmoji[this.current_date]));
         const parsedData = [];
     
         console.log(data);
+        let highest_emoji_percentage = "";
+        let highest_percentage = 0;
+        let total = 0;
 
         data.forEach((result, emoji) => {
             if(emoji.includes("emoji")){
                 parsedData.push(emoji+":"+result[0].toString()+":"+result[1].toString());
+                if(result[1] >= highest_percentage){
+                    highest_emoji_percentage = emoji;
+                    highest_percentage = result[1];
+                }
+            }
+            if(emoji.includes("total_data")){
+                this.state.total_data = result;
             }
         })
 
         this.state.data = parsedData;
+        this.state.highest_percentage_of_emoji = highest_emoji_percentage;
 
         const imageStyle = {
             width: "50%",
@@ -305,7 +326,7 @@ class FetchAPI extends Component {
                         <div>
                             <img src={this.getEmoji(this.parseEmojiCodeToName(data.split(":")[0]))} style={imageStyle}></img>
                             <div id="separator">&nbsp;</div>
-                            <b>{data.split(":")[1]}% of {data.split(":")[2]}</b>
+                            <b>{data.split(":")[1]}% of {this.state.total_data} ({data.split(":")[2]} of {this.state.total_data})</b>
                             <br />
                             feels <font style={{color: this.getEmotionCode(this.parseEmojiCodeToName(data.split(":")[0]))[0]}}>{this.getEmotionCode(this.parseEmojiCodeToName(data.split(":")[0]))[1]}</font> today
                         </div>
@@ -325,15 +346,32 @@ class FetchAPI extends Component {
                         <div id="divBackground" style={{background: this.state.divCardWrapper}}>
                             <CardWrapper style={{width: "60%", border: this.state.cardWrapperBorder, background: this.state.cardWrapperBackground, marginLeft: "auto", marginRight: "auto"}}>
                                 <Card onSwipe={this.onSwipe.bind(this, "emoji_1_data")} style={{textAlign: "center", background: "#FFFFFF", border: "10px solid #BABABA", borderRadius: "25px"}}>
-                                    ?
+                                    <div style={{height: "20%"}}>&nbsp;</div>
+                                    {/* <!-- Image reference : https://www.vecteezy.com/vector-art/442722-question-mark-vector-icon --> */}
+                                    <img style={{width: "50%", height: "50%"}} src={this.getQuestionMark()} />
+                                    <div style={{height: "20%"}}>&nbsp;</div>
+                                    <a href="https://www.vecteezy.com/vector-art/442722-question-mark-vector-icon">vecteezy</a>
                                 </Card>
                                 {this.renderCards()}
                                 <Card onSwipe={this.onSwipe.bind(this, "show-full-info")} style={{textAlign: "center", background: "#FFFFFF", border: "10px solid #BABABA", borderRadius: "25px"}}>
-                                    Last card
+                                    <div style={{height: "20%"}}>&nbsp;</div>
+                                    You are looking at
+                                    <br />
+                                    elderlies' emotions of
+                                    <br />
+                                    the display
+                                    <br /><br />
+                                    Elderlies in your area
+                                    <br />
+                                    feel <b>{this.parseEmojiCodeToName(this.state.highest_percentage_of_emoji)}</b> today
+                                    <br />
+                                    <br />
+                                    <br />
+                                    Wellderly
                                 </Card>
                             </CardWrapper>
                         </div>
-                        <div id="fullInfo">
+                        <div id="fullInfo" style={{justifyContent: 'center', alignItems: 'center', width: "100%", height: "100%"}}>
                         </div>
                     </>
                 );
