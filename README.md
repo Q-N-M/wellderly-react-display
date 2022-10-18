@@ -39,4 +39,4 @@ Use Arduino IDE to compile the code to arduino board
 Thanks to [Vecteezy](https://www.vecteezy.com/vector-art/442722-question-mark-vector-icon) for the question mark image for the display
 
 ## License
-[MIT license](https://github.com/ravelinx22/react-swipeable-cards)
+[MIT license](https://github.com/Q-N-M/wellderly-react-display/blob/main/LICENSE)
