@@ -45,6 +45,10 @@ Use Arduino IDE to compile the code to arduino board
 * [Pyserial](https://pypi.org/project/pyserial/)
 * [PyAutoGUI](https://pypi.org/project/PyAutoGUI/)
 
+## Arduino setup
+
+For this project, we are using the Ultrasonic Distance Sensor HC-SR04. In order to incorporate the sensor to the arduino we connected the sensor Ground Pins, Echo Pins, Trigger Pins, VCC Pins to arduino ports Ground Port, Port-8, Port-10, 5V Port. For hand gesture, move the hand closer to the sensor to swipe the card to the right and move the hand further from the sensore to swipe card to the left.
+
 ## Connection
 
 In order to connect to custom API, modify `wellderlyAPI` in `/wellderly-display/src/App.js`.
@@ -54,7 +58,10 @@ In order to connect to custom API, modify `wellderlyAPI` in `/wellderly-display/
 One thing to note about the sensor is make sure to keep the mouse up. Arduino will send serial command to pyserial and pyserial will move the mouse based on the specified direction by using pyautogui module. If the system doesn't has mouse input or the mouse pointer is not appeared in the screen (mouse is in sleep mode), pyautogui can't contact the mouse.
 
 ## Mention
-Thanks to [Vecteezy](https://www.vecteezy.com/vector-art/442722-question-mark-vector-icon) for the question mark image for the display
+Thanks to [Vecteezy](https://www.vecteezy.com/vector-art/442722-question-mark-vector-icon) for the question mark image for the display.
+
+## References
+[https://www.youtube.com/watch?v=sC5FNQU71gA](https://www.youtube.com/watch?v=sC5FNQU71gA)
 
 ## License
 [MIT license](https://github.com/Q-N-M/wellderly-react-display/blob/main/LICENSE)
